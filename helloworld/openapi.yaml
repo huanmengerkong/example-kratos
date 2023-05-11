@@ -7,6 +7,24 @@ info:
     description: The greeting service definition.
     version: 0.0.1
 paths:
+    /helloworld/nihao:
+        post:
+            tags:
+                - Greeter
+            operationId: Greeter_SayNihHao
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/helloworld.v1.NiHaoRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.Reply'
     /helloworld/{name}:
         get:
             tags:
@@ -34,5 +52,15 @@ components:
                 message:
                     type: string
             description: The response message containing the greetings
+        helloworld.v1.NiHaoRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+        helloworld.v1.Reply:
+            type: object
+            properties:
+                message:
+                    type: string
 tags:
     - name: Greeter

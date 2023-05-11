@@ -17,6 +17,13 @@ service Greeter {
       get: "/helloworld/{name}"
     };
   }
+
+  rpc SayNihHao(NiHaoRequest) returns (Reply){
+    option (google.api.http) ={
+      post: "/helloworld/nihao"
+      body:"*"
+    };
+  }
 }
 
 // The request message containing the user's name.
@@ -29,3 +36,9 @@ message HelloReply {
   string message = 1;
 }
 
+message NiHaoRequest{
+  string  name = 1;
+}
+message  Reply{
+  string  message =1;
+}
