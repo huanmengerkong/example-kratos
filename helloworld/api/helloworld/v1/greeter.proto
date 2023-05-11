@@ -20,7 +20,7 @@ service Greeter {
 
   rpc SayNihHao(NiHaoRequest) returns (Reply){
     option (google.api.http) ={
-      post: "/helloworld/nihao"
+      post: "/helloworld/test/nihao"
       body:"*"
     };
   }

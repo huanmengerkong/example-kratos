@@ -28,7 +28,10 @@ func (s *GreeterService) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1
 	return &v1.HelloReply{Message: "Hello " + g.Hello}, nil
 }
 
-func (s *GreeterService) SayNiHao(context.Context, *v1.NiHaoRequest) (*v1.Reply, error) {
-	// g, err := s.uc.CreateGreeter()
-	return &v1.Reply{}, nil
+func (s *GreeterService) SayNihHao(ctx context.Context, req *v1.NiHaoRequest) (*v1.Reply, error) {
+	g, err := s.uc.SayMr(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.Reply{Message: g}, nil
 }
