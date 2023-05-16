@@ -40,3 +40,15 @@ func (r *greeterRepo) ListByHello(context.Context, string) ([]*biz.Greeter, erro
 func (r *greeterRepo) ListAll(context.Context) ([]*biz.Greeter, error) {
 	return nil, nil
 }
+
+func (r *greeterRepo) SayYes(ctx context.Context) (err error) {
+	table := "micro_scrm_enterprise_192104618298240.ws_access_plan_point"
+	data := struct {
+		Id         int64
+		PointEvent string
+	}{
+		Id: 100, PointEvent: "test",
+	}
+	err = r.data.mdb.Table(table).Create(&data).Error
+	return
+}

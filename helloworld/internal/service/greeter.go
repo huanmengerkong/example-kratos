@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	v1 "helloworld/api/helloworld/v1"
 	"helloworld/internal/biz"
@@ -29,6 +30,7 @@ func (s *GreeterService) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1
 }
 
 func (s *GreeterService) SayNihHao(ctx context.Context, req *v1.NiHaoRequest) (*v1.Reply, error) {
+	fmt.Println(req)
 	g, err := s.uc.SayMr(ctx)
 	if err != nil {
 		return nil, err

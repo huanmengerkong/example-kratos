@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"fmt"
 
 	v1 "helloworld/api/helloworld/v1"
 
@@ -26,6 +27,7 @@ type GreeterRepo interface {
 	FindByID(context.Context, int64) (*Greeter, error)
 	ListByHello(context.Context, string) ([]*Greeter, error)
 	ListAll(context.Context) ([]*Greeter, error)
+	SayYes(ctx context.Context) (err error)
 }
 
 // GreeterUsecase is a Greeter usecase.
@@ -47,5 +49,7 @@ func (uc *GreeterUsecase) CreateGreeter(ctx context.Context, g *Greeter) (*Greet
 
 func (uc *GreeterUsecase) SayMr(ctx context.Context) (string, error) {
 	uc.log.WithContext(ctx).Infof("进来了")
-	return "test", nil
+	err := uc.repo.SayYes(ctx)
+	fmt.Println(err)
+	return "test", err
 }
