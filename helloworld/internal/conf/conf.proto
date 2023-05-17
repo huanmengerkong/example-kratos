@@ -42,3 +42,6 @@ message Data {
   Database database = 1;
   Redis redis = 2;
 }
+
+//cmd protoc --proto_path=./ --proto_path=./third_party --go_out=paths=source_relative:./  --go-http_out=paths=source_relative:./   --go-grpc_out=paths=source_relative:./
+// --openapi_out=fq_schema_naming=true,default_response=false:.  ./internal/conf/*.proto

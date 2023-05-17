@@ -2,41 +2,36 @@ package data
 
 import (
 	"context"
-
-	"user/internal/biz"
+	v1 "user/protogo/adminuser/v1"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
 
-type greeterRepo struct {
+type UserRepo struct {
 	data *Data
 	log  *log.Helper
 }
 
 // NewGreeterRepo .
-func NewGreeterRepo(data *Data, logger log.Logger) biz.GreeterRepo {
-	return &greeterRepo{
+func NewUserRepo(data *Data, logger log.Logger) *UserRepo {
+	return &UserRepo{
 		data: data,
 		log:  log.NewHelper(logger),
 	}
 }
 
-func (r *greeterRepo) Save(ctx context.Context, g *biz.Greeter) (*biz.Greeter, error) {
+func (r *UserRepo) Save(ctx context.Context, g *v1.UserRequest) (*v1.UserRequest, error) {
 	return g, nil
 }
 
-func (r *greeterRepo) Update(ctx context.Context, g *biz.Greeter) (*biz.Greeter, error) {
+func (r *UserRepo) Update(ctx context.Context, g *v1.UserRequest) (*v1.UserRequest, error) {
 	return g, nil
 }
 
-func (r *greeterRepo) FindByID(context.Context, int64) (*biz.Greeter, error) {
+func (r *UserRepo) FindByID(context.Context, int64) (*v1.Admin, error) {
 	return nil, nil
 }
 
-func (r *greeterRepo) ListByHello(context.Context, string) ([]*biz.Greeter, error) {
-	return nil, nil
-}
-
-func (r *greeterRepo) ListAll(context.Context) ([]*biz.Greeter, error) {
+func (r *UserRepo) ListAll(context.Context) ([]v1.AdminListReply, error) {
 	return nil, nil
 }

@@ -7,7 +7,7 @@ package api.adminuser.v1;
 //source_relative  如果指定了paths=source_relative:  获取当前路径，如果没有写它这取 语言path go_package,如果没有指定packge 还获取
 import "gogo.proto";
 import "google/api/annotations.proto";
-option go_package = "user/sssss/api/adminuser/v1;v1";
+option go_package = "user/api/adminuser/v1;v1";
 
 //import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 
@@ -54,5 +54,4 @@ message Outside {
   }
 }
 
-// cmd protoc --proto_path=./api        --proto_path=./third_party         --gogoslick_out=paths=source_relative:./protogo         --go-http_out=paths=source_relative:./protogo
-//--go-grpc_out=paths=source_relative:./protogo --openapi_out=fq_schema_naming=true,default_response=false:.  ./api/adminuser/v1/user.proto
+// cmd protoc --proto_path=./api --proto_path=./third_party  --gogoslick_out=paths=source_relative:./protogo  --go-http_out=paths=source_relative:./protogo --go-grpc_out=paths=source_relative:./protogo --openapi_out=fq_schema_naming=true,default_response=false:.  ./api/adminuser/v1/user.proto

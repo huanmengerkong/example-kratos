@@ -1,4 +1,4 @@
-package data_storage
+package storage
 
 import (
 	"google.golang.org/protobuf/types/known/durationpb"

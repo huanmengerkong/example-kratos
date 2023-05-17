@@ -52,7 +52,7 @@ userprot:
  	       --gogoslick_out=paths=source_relative:./protogo \
  	       --go-http_out=paths=source_relative:./protogo \
  	       --go-grpc_out=paths=source_relative:./protogo \
-	       --openapi_out=fq_schema_naming=true,default_response=false:.  ./api/adminuser/v1/user.proto
+	       --openapi_out=fq_schema_naming=true,default_response=false:.  ./api/adminuser/v1/*.proto
 
 .PHONY: build
 # build

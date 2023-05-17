@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package adminuser.v1;
+package api.adminuser.v1;
 
 option go_package = "user/api/adminuser/v1;v1";
 option java_multiple_files = true;
