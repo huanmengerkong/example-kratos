@@ -3,9 +3,9 @@ syntax = "proto3";
 package api.helloworld.v1;
 
 import "google/api/annotations.proto";
-option go_package = "helloworld/api/helloworld/v1;v1";
+option go_package = "user/api/adminuser/v1;v1";
 option java_multiple_files = true;
-option java_package = "api.helloworld.v1";
+option java_package = "api.adminuser.v1";
 
 service User {
 	rpc CreateUser (CreateUserRequest) returns (CreateUserReply){

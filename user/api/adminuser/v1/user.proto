@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package api.adminuser.v1;
+//go get github.com/gogo/protobuf/gogoproto
+//go get github.com/gogo/protobuf/proto
+//go get github.com/gogo/protobuf/protoc-gen-gogoslick
+//source_relative  如果指定了paths=source_relative:  获取当前路径，如果没有写它这取 语言path go_package,如果没有指定packge 还获取
+import "gogo.proto";
+import "google/api/annotations.proto";
+option go_package = "user/sssss/api/adminuser/v1;v1";
+
+//import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+
+service AdminUser {
+  // Sends a greeting
+  rpc AdminList (AdminListRequest) returns (AdminListReply) {
+    option (google.api.http) = {
+      get: "/admin/list"
+    };
+  }
+  rpc adminAdd (UserRequest) returns (UserRequest) {
+    option (google.api.http) = {
+      get: "/admin/add"
+    };
+  }
+}
+
+message Admin{
+  string email =1;
+  string name=3;
+  int64 status = 4;
+}
+
+message AdminListRequest{
+  int64  status = 1;
+}
+
+message AdminListReply{
+  repeated Admin adminList =1;
+}
+
+message UserRequest{
+    //optional string email = 1 [(gogoproto.jsontag) = "Email"];
+    string password = 2;
+    string name=3;
+    int64 status = 4;
+}
+
+message Outside {
+  string Field2 = 2 [(gogoproto.jsontag) = "MyField2", (gogoproto.moretags) = "gorm:\"Field2\""];
+  oneof filed {
+    string Field3 = 3 [(gogoproto.jsontag) = "MyField3", (gogoproto.moretags) = "xml:\",comment\""];
+  }
+}
+
+// cmd protoc --proto_path=./api        --proto_path=./third_party         --gogoslick_out=paths=source_relative:./protogo         --go-http_out=paths=source_relative:./protogo
+//--go-grpc_out=paths=source_relative:./protogo --openapi_out=fq_schema_naming=true,default_response=false:.  ./api/adminuser/v1/user.proto

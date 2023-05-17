@@ -1,0 +1,18 @@
+server:
+  http:
+    addr: 0.0.0.0:8001
+    timeout: 6s
+  grpc:
+    addr: 0.0.0.0:9001
+    timeout: 6s
+data:
+  database:
+    driver: mysql
+    source: wsdev:8yovNFYOIsKXw*M5@tcp(10.204.0.16:3306)/?multiStatements=true
+  redis:
+    addr: 10.204.0.3:6379
+    user: ""
+    pwd: "Efwm5k3OfRFXe@Jyb3"
+    db: 0
+    read_timeout: 0.2s
+    write_timeout: 0.2s
