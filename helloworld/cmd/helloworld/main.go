@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	log2 "github.com/huanmengerkong/example-kratos/log"
+	log2 "github.com/huanmengerkong/example-kratos/pkg/log"
 	"os"
 
 	"helloworld/internal/conf"
@@ -13,8 +13,6 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-
-	_ "go.uber.org/automaxprocs"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"

@@ -9,8 +9,8 @@ import (
 
 func ConnectMysqlDb(conf *DataBase) (db *gorm.DB, err error) {
 	db, err = gorm.Open(mysql.New(mysql.Config{
-		DriverName: conf.Driver,
-		//		ServerVersion:                 "",
+		DriverName:                    conf.Driver,
+		ServerVersion:                 "",
 		DSN:                           conf.Source,
 		DSNConfig:                     nil,
 		Conn:                          nil,

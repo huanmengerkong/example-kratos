@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-http v2.6.1
 // - protoc             v4.22.3
-// source: adminuser/v1/user.proto
+// source: helloworld/v1/user.proto
 
 package v1
 
@@ -19,11 +19,11 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationUserCreateUser = "/api.adminuser.v1.User/CreateUser"
-const OperationUserDeleteUser = "/api.adminuser.v1.User/DeleteUser"
-const OperationUserGetUser = "/api.adminuser.v1.User/GetUser"
-const OperationUserListUser = "/api.adminuser.v1.User/ListUser"
-const OperationUserUpdateUser = "/api.adminuser.v1.User/UpdateUser"
+const OperationUserCreateUser = "/api.helloworld.v1.User/CreateUser"
+const OperationUserDeleteUser = "/api.helloworld.v1.User/DeleteUser"
+const OperationUserGetUser = "/api.helloworld.v1.User/GetUser"
+const OperationUserListUser = "/api.helloworld.v1.User/ListUser"
+const OperationUserUpdateUser = "/api.helloworld.v1.User/UpdateUser"
 
 type UserHTTPServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserReply, error)

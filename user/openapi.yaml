@@ -3,84 +3,8 @@
 
 openapi: 3.0.3
 info:
-    title: AdminUser API
+    title: ""
     version: 0.0.1
-paths:
-    /admin/add:
-        get:
-            tags:
-                - AdminUser
-            operationId: AdminUser_AdminAdd
-            parameters:
-                - name: password
-                  in: query
-                  description: optional string email = 1 [(gogoproto.jsontag) = "Email"];
-                  schema:
-                    type: string
-                - name: name
-                  in: query
-                  schema:
-                    type: string
-                - name: status
-                  in: query
-                  schema:
-                    type: integer
-                    format: int64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.adminuser.v1.UserRequest'
-    /admin/list:
-        get:
-            tags:
-                - AdminUser
-            description: Sends a greeting
-            operationId: AdminUser_AdminList
-            parameters:
-                - name: status
-                  in: query
-                  schema:
-                    type: integer
-                    format: int64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.adminuser.v1.AdminListReply'
+paths: {}
 components:
-    schemas:
-        api.adminuser.v1.Admin:
-            type: object
-            properties:
-                email:
-                    type: string
-                name:
-                    type: string
-                status:
-                    type: integer
-                    format: int64
-        api.adminuser.v1.AdminListReply:
-            type: object
-            properties:
-                adminList:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.adminuser.v1.Admin'
-        api.adminuser.v1.UserRequest:
-            type: object
-            properties:
-                password:
-                    type: string
-                    description: optional string email = 1 [(gogoproto.jsontag) = "Email"];
-                name:
-                    type: string
-                status:
-                    type: integer
-                    format: int64
-tags:
-    - name: AdminUser
+    schemas: {}

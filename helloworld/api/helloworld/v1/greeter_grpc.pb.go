@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v4.22.3
-// source: adminuser/v1/greeter.proto
+// source: helloworld/v1/greeter.proto
 
 package v1
 
@@ -37,7 +37,7 @@ func NewGreeterClient(cc grpc.ClientConnInterface) GreeterClient {
 
 func (c *greeterClient) SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error) {
 	out := new(HelloReply)
-	err := c.cc.Invoke(ctx, "/adminuser.v1.Greeter/SayHello", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/helloworld.v1.Greeter/SayHello", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (c *greeterClient) SayHello(ctx context.Context, in *HelloRequest, opts ...
 
 func (c *greeterClient) SayNihHao(ctx context.Context, in *NiHaoRequest, opts ...grpc.CallOption) (*Reply, error) {
 	out := new(Reply)
-	err := c.cc.Invoke(ctx, "/adminuser.v1.Greeter/SayNihHao", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/helloworld.v1.Greeter/SayNihHao", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +96,7 @@ func _Greeter_SayHello_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/adminuser.v1.Greeter/SayHello",
+		FullMethod: "/helloworld.v1.Greeter/SayHello",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GreeterServer).SayHello(ctx, req.(*HelloRequest))
@@ -114,7 +114,7 @@ func _Greeter_SayNihHao_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/adminuser.v1.Greeter/SayNihHao",
+		FullMethod: "/helloworld.v1.Greeter/SayNihHao",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GreeterServer).SayNihHao(ctx, req.(*NiHaoRequest))
@@ -126,7 +126,7 @@ func _Greeter_SayNihHao_Handler(srv interface{}, ctx context.Context, dec func(i
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Greeter_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "adminuser.v1.Greeter",
+	ServiceName: "helloworld.v1.Greeter",
 	HandlerType: (*GreeterServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -139,5 +139,5 @@ var Greeter_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "adminuser/v1/greeter.proto",
+	Metadata: "helloworld/v1/greeter.proto",
 }

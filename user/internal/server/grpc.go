@@ -1,6 +1,7 @@
 package server
 
 import (
+	"strconv"
 	"user/internal/conf"
 	"user/internal/service"
 	v1 "user/protogo/adminuser/v1"
@@ -11,7 +12,7 @@ import (
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(c *conf.Server, greeter *service.UserService, logger log.Logger) *grpc.Server {
+func NewGRPCServer(c *conf.Server, user *service.UserService, logger log.Logger) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
@@ -21,13 +22,13 @@ func NewGRPCServer(c *conf.Server, greeter *service.UserService, logger log.Logg
 		opts = append(opts, grpc.Network(c.Grpc.Network))
 	}
 	if c.Grpc.Addr != "" {
-		opts = append(opts, grpc.Address(c.Grpc.Addr))
+		opts = append(opts, grpc.Address(c.Grpc.Addr+":"+strconv.Itoa(int(c.Grpc.Port))))
 	}
 	if c.Grpc.Timeout != nil {
 		opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
 	}
 	srv := grpc.NewServer(opts...)
-	v1.RegisterAdminUserServer(srv, greeter)
+	v1.RegisterAdminUserServer(srv, user)
 
 	return srv
 }

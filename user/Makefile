@@ -45,7 +45,7 @@ api:
 	       $(API_PROTO_FILES)
 
 .PHONY: userprot
-
+#user 模块的proto 生成
 userprot:
 	protoc --proto_path=./api \
 	       --proto_path=./third_party \
@@ -54,6 +54,15 @@ userprot:
  	       --go-grpc_out=paths=source_relative:./protogo \
 	       --openapi_out=fq_schema_naming=true,default_response=false:.  ./api/adminuser/v1/*.proto
 
+.PHONY: con
+#重新生成配置文件
+con:
+	protoc  --proto_path=./ \
+    		--proto_path=./third_party \
+    		--go_out=paths=source_relative:./  \
+    		--go-http_out=paths=source_relative:./   \
+    		--go-grpc_out=paths=source_relative:./  \
+    		--openapi_out=fq_schema_naming=true,default_response=false:.  ./internal/conf/*.proto
 .PHONY: build
 # build
 build:

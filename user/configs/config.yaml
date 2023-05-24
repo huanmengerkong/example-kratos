@@ -1,9 +1,12 @@
 server:
+  service_name: user
   http:
-    addr: 0.0.0.0:8001
+    addr: 0.0.0.0
+    port: 8001
     timeout: 6s
   grpc:
-    addr: 0.0.0.0:9001
+    addr: 0.0.0.0
+    port: 9001
     timeout: 6s
 data:
   database:
@@ -14,5 +17,5 @@ data:
     user: ""
     pwd: "Efwm5k3OfRFXe@Jyb3"
     db: 0
-    read_timeout: 0.2s
-    write_timeout: 0.2s
+    read_timeout: 10s
+    write_timeout: 10s

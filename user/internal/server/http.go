@@ -1,6 +1,7 @@
 package server
 
 import (
+	"strconv"
 	"user/internal/conf"
 	"user/internal/service"
 	v1 "user/protogo/adminuser/v1"
@@ -21,7 +22,7 @@ func NewHTTPServer(c *conf.Server, user *service.UserService, logger log.Logger)
 		opts = append(opts, http.Network(c.Http.Network))
 	}
 	if c.Http.Addr != "" {
-		opts = append(opts, http.Address(c.Http.Addr))
+		opts = append(opts, http.Address(c.Http.Addr+":"+strconv.Itoa(int(c.Http.Port))))
 	}
 	if c.Http.Timeout != nil {
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
