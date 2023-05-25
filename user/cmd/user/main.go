@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	log2 "github.com/huanmengerkong/example-kratos/pkg/log"
+	"github.com/huanmengerkong/example-kratos/pkg/sr"
 	"golang.org/x/net/context"
-	log2 "huanmengerkong/log"
-	"huanmengerkong/pkg/sr"
 	"os"
 	"user/internal/conf"
 
@@ -59,6 +59,7 @@ func main() {
 		"trace.id", tracing.TraceID(),
 		"span.id", tracing.SpanID(),
 	)*/
+
 	logger := log2.NewLogrusLogger()
 	c := config.New(
 		config.WithSource(
@@ -94,20 +95,4 @@ func main() {
 	if err := app.Run(); err != nil {
 		panic(err)
 	}
-}
-
-type RecoverQuest struct {
-	ServiceName string `json:"service_name"`
-	IP          string `json:"ip"`
-	Port        int    `json:"port"`
-}
-
-func recover(data RecoverQuest) {
-	// https://github.com/hashicorp/consul/tree/master/api。
-	// 这个例子中，我们首先创建了一个Consul客户端，然后使用该客户端注册服务。接下来，我们使用该客户端获取服务列表，并使用watch机制监视服务列表的变化。当服务列表发生变化时，我们会收到通知并更新服务列表。以下是示例代码：
-
-	// 创建一个新的Consul客户端
-
-	// 获取服务列表
-
 }
