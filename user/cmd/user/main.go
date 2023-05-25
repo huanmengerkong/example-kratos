@@ -3,8 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/hashicorp/consul/api"
-	log2 "github.com/huanmengerkong/example-kratos/log"
+	"golang.org/x/net/context"
 	"os"
 	"user/internal/conf"
 
@@ -69,19 +68,20 @@ func main() {
 	if err := c.Load(); err != nil {
 		panic(err)
 	}
-
+	ctx := context.Context(context.Background())
 	var bc conf.Bootstrap
 	if err := c.Scan(&bc); err != nil {
 		panic(err)
 	}
 	// 注册服务
-	// agent := sr.NewAgent("localhost:8500")
-	recover(RecoverQuest{
+	hconsul := sr.NewAgent("localhost:8500")
+	err := hconsul.Client(ctx)
+	err = hconsul.RegisterService(ctx, sr.RecoverQuest{
 		ServiceName: bc.Server.ServiceName,
 		IP:          bc.Server.Grpc.Addr,
 		Port:        int(bc.Server.Grpc.Port),
 	})
-	fmt.Println(bc.Data)
+	fmt.Println(bc.Data, err)
 	app, cleanup, err := wireApp(bc.Server, bc.Data, logger)
 	if err != nil {
 		panic(err)
@@ -105,35 +105,6 @@ func recover(data RecoverQuest) {
 	// 这个例子中，我们首先创建了一个Consul客户端，然后使用该客户端注册服务。接下来，我们使用该客户端获取服务列表，并使用watch机制监视服务列表的变化。当服务列表发生变化时，我们会收到通知并更新服务列表。以下是示例代码：
 
 	// 创建一个新的Consul客户端
-	configs := api.DefaultConfig()
-	configs.Address = "localhost:8500"
-	client, err := api.NewClient(configs)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// 注册一个新的服务
-	registration := new(api.AgentServiceRegistration)
-	registration.ID = data.ServiceName
-	registration.Name = data.ServiceName
-	registration.Address = data.IP
-	registration.Port = data.Port
-	registration.Tags = []string{"tag1"}
-	registration.Check = &api.AgentServiceCheck{
-		TTL: "15",
-	}
-	/*check := &api.AgentServiceCheck{
-		HTTP:                           data.Grpc + "/health",
-		Interval:                       "10s",
-		Timeout:                        "1s",
-		DeregisterCriticalServiceAfter: "1m",
-	}
-	registration.Check = check*/
-
-	err = client.Agent().ServiceRegister(registration)
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	// 获取服务列表
 

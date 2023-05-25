@@ -17,7 +17,27 @@ func NewAgent(client string) *Hconsul {
 }
 
 func (h *Hconsul) RegisterService(ctx context.Context, req RecoverQuest) error {
-	return nil
+
+	// 注册一个新的服务
+	registration := new(api.AgentServiceRegistration)
+	registration.ID = req.ServiceName
+	registration.Name = req.ServiceName
+	registration.Address = req.IP
+	registration.Port = req.Port
+	registration.Tags = []string{"tag1"}
+	registration.Check = &api.AgentServiceCheck{
+		TTL: "15",
+	}
+	/*check := &api.AgentServiceCheck{
+		HTTP:                           data.Grpc + "/health",
+		Interval:                       "10s",
+		Timeout:                        "1s",
+		DeregisterCriticalServiceAfter: "1m",
+	}
+	registration.Check = check*/
+	err := h.client.Agent().ServiceRegister(registration)
+	fmt.Println(111)
+	return err
 }
 
 func (h *Hconsul) Client(ctx context.Context) error {
