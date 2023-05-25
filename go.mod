@@ -1,4 +1,4 @@
-module exampla-kratos
+module huanmengerkong
 
 go 1.19
 
