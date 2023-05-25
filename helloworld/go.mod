@@ -7,7 +7,6 @@ require (
 	github.com/google/wire v0.5.0
 	github.com/huanmengerkong/example-kratos v0.0.0-20230517074451-6cdc0a19fc5c
 	github.com/redis/go-redis/v9 v9.0.4
-	go.uber.org/automaxprocs v1.5.1
 	google.golang.org/genproto v0.0.0-20230223222841-637eb2293923
 	google.golang.org/grpc v1.53.0
 	google.golang.org/protobuf v1.30.0

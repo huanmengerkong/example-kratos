@@ -1,4 +1,4 @@
-module github.com/huanmengerkong/what_seven
+module github.com/huanmengerkong/example-kratos
 
 go 1.19
 

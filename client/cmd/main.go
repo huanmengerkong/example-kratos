@@ -1,4 +1,4 @@
-package cmd
+package main
 
 import (
 	"context"
@@ -19,6 +19,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	// defer conn.Close()
 	cc := v1.NewGreeterClient(conn)
 	r, err := cc.SayNihHao(context.Background(), &v1.NiHaoRequest{Name: "test"})
