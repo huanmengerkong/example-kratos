@@ -1,6 +1,8 @@
 package main
 
 import (
+	log2 "exampla-kratos/pkg/log"
+	"exampla-kratos/pkg/sr"
 	"flag"
 	"fmt"
 	"golang.org/x/net/context"
