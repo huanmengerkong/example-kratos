@@ -21,17 +21,30 @@ const _ = http.SupportPackageIsVersion1
 
 const OperationAdminUseradminAdd = "/api.adminuser.v1.AdminUser/adminAdd"
 const OperationAdminUserAdminList = "/api.adminuser.v1.AdminUser/AdminList"
+const OperationAdminUserfrontedInfo = "/api.adminuser.v1.AdminUser/frontedInfo"
+const OperationAdminUserfrontedLogin = "/api.adminuser.v1.AdminUser/frontedLogin"
+const OperationAdminUserfrontedRegister = "/api.adminuser.v1.AdminUser/frontedRegister"
+const OperationAdminUserfrontedReset = "/api.adminuser.v1.AdminUser/frontedReset"
 
 type AdminUserHTTPServer interface {
 	AdminAdd(context.Context, *UserRequest) (*UserRequest, error)
 	// AdminList Sends a greeting
 	AdminList(context.Context, *AdminListRequest) (*AdminListReply, error)
+	FrontedInfo(context.Context, *FrontedInfoRequest) (*ReplyFrontedInfo, error)
+	// FrontedLogin fronted
+	FrontedLogin(context.Context, *LoginRequest) (*RegisterReply, error)
+	FrontedRegister(context.Context, *LoginRequest) (*RegisterReply, error)
+	FrontedReset(context.Context, *UserRequest) (*UserRequest, error)
 }
 
 func RegisterAdminUserHTTPServer(s *http.Server, srv AdminUserHTTPServer) {
 	r := s.Route("/")
 	r.GET("/admin/list", _AdminUser_AdminList0_HTTP_Handler(srv))
 	r.GET("/admin/add", _AdminUser_AdminAdd0_HTTP_Handler(srv))
+	r.POST("/front/login", _AdminUser_FrontedLogin0_HTTP_Handler(srv))
+	r.POST("/front/register", _AdminUser_FrontedRegister0_HTTP_Handler(srv))
+	r.POST("/front/reset", _AdminUser_FrontedReset0_HTTP_Handler(srv))
+	r.POST("/front/info", _AdminUser_FrontedInfo0_HTTP_Handler(srv))
 }
 
 func _AdminUser_AdminList0_HTTP_Handler(srv AdminUserHTTPServer) func(ctx http.Context) error {
@@ -72,9 +85,89 @@ func _AdminUser_AdminAdd0_HTTP_Handler(srv AdminUserHTTPServer) func(ctx http.Co
 	}
 }
 
+func _AdminUser_FrontedLogin0_HTTP_Handler(srv AdminUserHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in LoginRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminUserfrontedLogin)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.FrontedLogin(ctx, req.(*LoginRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*RegisterReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminUser_FrontedRegister0_HTTP_Handler(srv AdminUserHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in LoginRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminUserfrontedRegister)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.FrontedRegister(ctx, req.(*LoginRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*RegisterReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminUser_FrontedReset0_HTTP_Handler(srv AdminUserHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UserRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminUserfrontedReset)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.FrontedReset(ctx, req.(*UserRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UserRequest)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminUser_FrontedInfo0_HTTP_Handler(srv AdminUserHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in FrontedInfoRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminUserfrontedInfo)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.FrontedInfo(ctx, req.(*FrontedInfoRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ReplyFrontedInfo)
+		return ctx.Result(200, reply)
+	}
+}
+
 type AdminUserHTTPClient interface {
 	AdminAdd(ctx context.Context, req *UserRequest, opts ...http.CallOption) (rsp *UserRequest, err error)
 	AdminList(ctx context.Context, req *AdminListRequest, opts ...http.CallOption) (rsp *AdminListReply, err error)
+	FrontedInfo(ctx context.Context, req *FrontedInfoRequest, opts ...http.CallOption) (rsp *ReplyFrontedInfo, err error)
+	FrontedLogin(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *RegisterReply, err error)
+	FrontedRegister(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *RegisterReply, err error)
+	FrontedReset(ctx context.Context, req *UserRequest, opts ...http.CallOption) (rsp *UserRequest, err error)
 }
 
 type AdminUserHTTPClientImpl struct {
@@ -105,6 +198,58 @@ func (c *AdminUserHTTPClientImpl) AdminList(ctx context.Context, in *AdminListRe
 	opts = append(opts, http.Operation(OperationAdminUserAdminList))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminUserHTTPClientImpl) FrontedInfo(ctx context.Context, in *FrontedInfoRequest, opts ...http.CallOption) (*ReplyFrontedInfo, error) {
+	var out ReplyFrontedInfo
+	pattern := "/front/info"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminUserfrontedInfo))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminUserHTTPClientImpl) FrontedLogin(ctx context.Context, in *LoginRequest, opts ...http.CallOption) (*RegisterReply, error) {
+	var out RegisterReply
+	pattern := "/front/login"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminUserfrontedLogin))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminUserHTTPClientImpl) FrontedRegister(ctx context.Context, in *LoginRequest, opts ...http.CallOption) (*RegisterReply, error) {
+	var out RegisterReply
+	pattern := "/front/register"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminUserfrontedRegister))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminUserHTTPClientImpl) FrontedReset(ctx context.Context, in *UserRequest, opts ...http.CallOption) (*UserRequest, error) {
+	var out UserRequest
+	pattern := "/front/reset"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminUserfrontedReset))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

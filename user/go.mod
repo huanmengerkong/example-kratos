@@ -14,9 +14,8 @@ require (
 	google.golang.org/grpc v1.49.0
 	google.golang.org/protobuf v1.28.1
 	gorm.io/gorm v1.25.1
-)
 
-replace github.com/huanmengerkong/example-kratos v0.0.0-20230525021104-7bb937d2bad5 => ../pkg/sr
+)
 
 require (
 	github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da // indirect
@@ -56,5 +55,3 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/mysql v1.5.0 // indirect
 )
-
-//replace github.com/huanmengerkong/example-kratos v0.0.0 => ../example-kratos

@@ -44,3 +44,10 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 	}
 	return &Data{mdb: mdb, rdb: rdb}, cleanup, nil
 }
+
+func CreateTable() {
+	var table = map[string]string{
+		"front_user": "CREATE TABLE `front_user` ( `id` int(11) NOT NULL AUTO_INCREMENT , `name` varchar(255) NOT NULL DEFAULT '' COMMENT '用户名称', `status` tinyint(3)   NOT NULL DEFAULT '1', `email` varchar(255) NOT NULL COMMENT '用户邮箱', `password` varchar(255) NOT NULL COMMENT '密码', `salt` varchar(255) NOT NULL, `created_at` int(11) NOT NULL DEFAULT '0', `updated_at` int(11) NOT NULL DEFAULT '0', `deleted_at` int(11) NOT NULL DEFAULT '0', PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
+	}
+	fmt.Println(table)
+}

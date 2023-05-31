@@ -24,8 +24,56 @@ service AdminUser {
       get: "/admin/add"
     };
   }
+  // fronted
+  rpc frontedLogin (loginRequest) returns (registerReply) {
+    option (google.api.http) = {
+      post: "/front/login"
+      body:"*"
+    };
+  }
+  rpc frontedRegister (loginRequest) returns (registerReply) {
+    option (google.api.http) = {
+      post: "/front/register"
+      body:"*"
+    };
+  }
+  rpc frontedReset (UserRequest) returns (UserRequest) {
+    option (google.api.http) = {
+      post: "/front/reset"
+      body:"*"
+    };
+  }
+  rpc frontedInfo (frontedInfoRequest) returns (replyFrontedInfo) {
+    option (google.api.http) = {
+      post: "/front/info"
+      body:"*"
+    };
+  }
 }
 
+message loginRequest{
+  int64  id =4;
+  string name  =1;
+  string password = 3;
+  string email = 2 [(gogoproto.jsontag) = "email"];
+}
+
+message registerReply{
+  string  code = 1;
+  replyFrontedInfo info = 2 [(gogoproto.jsontag) = "info"];
+  string  token = 3 [(gogoproto.jsontag) = "token"];
+}
+
+message  frontedInfoRequest{
+  int64  id =1;
+}
+
+message replyFrontedInfo{
+   string email = 1 [(gogoproto.jsontag) = "email"];
+   string name = 2 [(gogoproto.jsontag) = "name"];
+   int64 created_at = 3 [(gogoproto.jsontag) = "created_at"];
+   int64 coin = 4 [(gogoproto.jsontag) = "coin"];
+}
 message Admin{
   string email =1;
   string name=3;

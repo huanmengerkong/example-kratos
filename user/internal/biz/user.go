@@ -3,6 +3,7 @@ package biz
 import (
 	"context"
 	"github.com/go-kratos/kratos/v2/log"
+	"user/model"
 	v1 "user/protogo/adminuser/v1"
 )
 
@@ -18,6 +19,11 @@ type UserRepo interface {
 		FindByID(context.Context, int64) (*v1.Admin, error)
 		/*ListByHello(context.Context, string) (v1.AdminListReply, error)*/
 	ListAll(context.Context) ([]v1.AdminListReply, error)
+
+	// GetInfo fronted 前台登录
+	GetInfo(ctx context.Context, request *v1.LoginRequest) v1.ReplyFrontedInfo
+	// InsertUser 新增前台注册
+	InsertUser(ctx context.Context, request model.FrontUser) (model.FrontUser, error)
 }
 
 type UserUsecase struct {
@@ -32,4 +38,9 @@ func NewUserUsecase(repo UserRepo, logger log.Logger) *UserUsecase {
 func (uc *UserUsecase) CreateUser(ctx context.Context, g *v1.UserRequest) (*v1.UserRequest, error) {
 	uc.log.WithContext(ctx).Infof("CreateGreeter: %v")
 	return uc.repo.Save(ctx, g)
+}
+
+func (uc *UserUsecase) InsertInfo(ctx context.Context, request model.FrontUser) (model.FrontUser, error) {
+	user, err := uc.repo.InsertUser(ctx, request)
+	return user, err
 }

@@ -25,6 +25,11 @@ type AdminUserClient interface {
 	// Sends a greeting
 	AdminList(ctx context.Context, in *AdminListRequest, opts ...grpc.CallOption) (*AdminListReply, error)
 	AdminAdd(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserRequest, error)
+	// fronted
+	FrontedLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*RegisterReply, error)
+	FrontedRegister(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*RegisterReply, error)
+	FrontedReset(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserRequest, error)
+	FrontedInfo(ctx context.Context, in *FrontedInfoRequest, opts ...grpc.CallOption) (*ReplyFrontedInfo, error)
 }
 
 type adminUserClient struct {
@@ -53,6 +58,42 @@ func (c *adminUserClient) AdminAdd(ctx context.Context, in *UserRequest, opts ..
 	return out, nil
 }
 
+func (c *adminUserClient) FrontedLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*RegisterReply, error) {
+	out := new(RegisterReply)
+	err := c.cc.Invoke(ctx, "/api.adminuser.v1.AdminUser/frontedLogin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminUserClient) FrontedRegister(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*RegisterReply, error) {
+	out := new(RegisterReply)
+	err := c.cc.Invoke(ctx, "/api.adminuser.v1.AdminUser/frontedRegister", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminUserClient) FrontedReset(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserRequest, error) {
+	out := new(UserRequest)
+	err := c.cc.Invoke(ctx, "/api.adminuser.v1.AdminUser/frontedReset", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminUserClient) FrontedInfo(ctx context.Context, in *FrontedInfoRequest, opts ...grpc.CallOption) (*ReplyFrontedInfo, error) {
+	out := new(ReplyFrontedInfo)
+	err := c.cc.Invoke(ctx, "/api.adminuser.v1.AdminUser/frontedInfo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AdminUserServer is the server API for AdminUser service.
 // All implementations must embed UnimplementedAdminUserServer
 // for forward compatibility
@@ -60,6 +101,11 @@ type AdminUserServer interface {
 	// Sends a greeting
 	AdminList(context.Context, *AdminListRequest) (*AdminListReply, error)
 	AdminAdd(context.Context, *UserRequest) (*UserRequest, error)
+	// fronted
+	FrontedLogin(context.Context, *LoginRequest) (*RegisterReply, error)
+	FrontedRegister(context.Context, *LoginRequest) (*RegisterReply, error)
+	FrontedReset(context.Context, *UserRequest) (*UserRequest, error)
+	FrontedInfo(context.Context, *FrontedInfoRequest) (*ReplyFrontedInfo, error)
 	mustEmbedUnimplementedAdminUserServer()
 }
 
@@ -72,6 +118,18 @@ func (UnimplementedAdminUserServer) AdminList(context.Context, *AdminListRequest
 }
 func (UnimplementedAdminUserServer) AdminAdd(context.Context, *UserRequest) (*UserRequest, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AdminAdd not implemented")
+}
+func (UnimplementedAdminUserServer) FrontedLogin(context.Context, *LoginRequest) (*RegisterReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FrontedLogin not implemented")
+}
+func (UnimplementedAdminUserServer) FrontedRegister(context.Context, *LoginRequest) (*RegisterReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FrontedRegister not implemented")
+}
+func (UnimplementedAdminUserServer) FrontedReset(context.Context, *UserRequest) (*UserRequest, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FrontedReset not implemented")
+}
+func (UnimplementedAdminUserServer) FrontedInfo(context.Context, *FrontedInfoRequest) (*ReplyFrontedInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FrontedInfo not implemented")
 }
 func (UnimplementedAdminUserServer) mustEmbedUnimplementedAdminUserServer() {}
 
@@ -122,6 +180,78 @@ func _AdminUser_AdminAdd_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminUser_FrontedLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminUserServer).FrontedLogin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.adminuser.v1.AdminUser/frontedLogin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminUserServer).FrontedLogin(ctx, req.(*LoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminUser_FrontedRegister_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminUserServer).FrontedRegister(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.adminuser.v1.AdminUser/frontedRegister",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminUserServer).FrontedRegister(ctx, req.(*LoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminUser_FrontedReset_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminUserServer).FrontedReset(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.adminuser.v1.AdminUser/frontedReset",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminUserServer).FrontedReset(ctx, req.(*UserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminUser_FrontedInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FrontedInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminUserServer).FrontedInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.adminuser.v1.AdminUser/frontedInfo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminUserServer).FrontedInfo(ctx, req.(*FrontedInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AdminUser_ServiceDesc is the grpc.ServiceDesc for AdminUser service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -136,6 +266,22 @@ var AdminUser_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "adminAdd",
 			Handler:    _AdminUser_AdminAdd_Handler,
+		},
+		{
+			MethodName: "frontedLogin",
+			Handler:    _AdminUser_FrontedLogin_Handler,
+		},
+		{
+			MethodName: "frontedRegister",
+			Handler:    _AdminUser_FrontedRegister_Handler,
+		},
+		{
+			MethodName: "frontedReset",
+			Handler:    _AdminUser_FrontedReset_Handler,
+		},
+		{
+			MethodName: "frontedInfo",
+			Handler:    _AdminUser_FrontedInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
