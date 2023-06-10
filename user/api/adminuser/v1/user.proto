@@ -69,6 +69,7 @@ message  frontedInfoRequest{
 }
 
 message replyFrontedInfo{
+  int64  id  = 5 [(gogoproto.jsontag) = "id"];
    string email = 1 [(gogoproto.jsontag) = "email"];
    string name = 2 [(gogoproto.jsontag) = "name"];
    int64 created_at = 3 [(gogoproto.jsontag) = "created_at"];

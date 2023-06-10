@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"gorm.io/gorm"
 	"user/internal/biz"
 	"user/model"
 	v1 "user/protogo/adminuser/v1"
@@ -12,12 +13,14 @@ import (
 type UserRepo struct {
 	data *Data
 	log  *log.Helper
+	cfd  *Config
 }
 
 // NewGreeterRepo . 这个地方是实例化biz 模型对象
-func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
+func NewUserRepo(data *Data, cf *Config, logger log.Logger) biz.UserRepo {
 	return &UserRepo{
 		data: data,
+		cfd:  cf,
 		log:  log.NewHelper(logger),
 	}
 }
@@ -32,8 +35,14 @@ func (r *UserRepo) ListAll(context.Context) ([]v1.AdminListReply, error) {
 	return nil, nil
 }
 
-func (r *UserRepo) GetInfo(ctx context.Context, request *v1.LoginRequest) v1.ReplyFrontedInfo {
-	return v1.ReplyFrontedInfo{}
+func (r *UserRepo) GetInfo(ctx context.Context, request *v1.LoginRequest) (m model.FrontUser, err error) {
+	err = r.data.mdb.Table(model.FrontUser{}.TableName()).Scopes(func(db *gorm.DB) *gorm.DB {
+		if request.Email != "" {
+			db.Where("email=? ", request.Email)
+		}
+		return db
+	}).Where("deleted_at = 0 and status = ?", model.STATUS_USER).Find(&m).Error
+	return
 }
 
 // InsertUser 新增前台注册

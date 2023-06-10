@@ -7,16 +7,21 @@ import (
 	storage "github.com/huanmengerkong/example-kratos/pkg/data_storage"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
+	"user/helper"
 	"user/internal/conf"
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewUserRepo)
+var ProviderSet = wire.NewSet(NewData, NewConfig, NewUserRepo, NewHelper)
 
 // Data .
 type Data struct {
 	mdb *gorm.DB
 	rdb *redis.Client
+}
+
+type Config struct {
+	JwtKey string `json:"jwt_key"`
 }
 
 // NewData .
@@ -43,6 +48,16 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 		panic(fmt.Sprintf("rdb 报错了%v", err))
 	}
 	return &Data{mdb: mdb, rdb: rdb}, cleanup, nil
+}
+
+func NewHelper(c *conf.Data) *helper.Helper {
+	return helper.NewHelper()
+}
+
+func NewConfig(bc *conf.Config) *Config {
+
+	// return bc
+	return &Config{bc.Config.GetJwt().GetJwtKey()}
 }
 
 func CreateTable() {

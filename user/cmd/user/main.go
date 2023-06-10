@@ -76,6 +76,11 @@ func main() {
 	if err := c.Scan(&bc); err != nil {
 		panic(err)
 	}
+	var configData conf.Config
+	if err := c.Scan(&configData); err != nil {
+		panic(err)
+	}
+	InitConfig(configData)
 	// 注册服务
 	hconsul := sr.NewAgent("localhost:8500")
 	err := hconsul.Client(ctx)
@@ -84,8 +89,8 @@ func main() {
 		IP:          bc.Server.Grpc.Addr,
 		Port:        int(bc.Server.Grpc.Port),
 	})
-	fmt.Println(bc.Data, err)
-	app, cleanup, err := wireApp(bc.Server, bc.Data, logger)
+	fmt.Println(configData, err)
+	app, cleanup, err := wireApp(bc.Server, bc.Data, &configData, configData.Config.Jwt.JwtKey, logger)
 	if err != nil {
 		panic(err)
 	}
@@ -95,4 +100,8 @@ func main() {
 	if err := app.Run(); err != nil {
 		panic(err)
 	}
+}
+
+func InitConfig(cfg conf.Config) {
+	conf.CfgData = cfg
 }

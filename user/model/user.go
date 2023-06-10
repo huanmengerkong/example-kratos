@@ -1,5 +1,10 @@
 package model
 
+const (
+	STATUS_USER = iota + 1
+	STATUS_FORBIT
+)
+
 type FrontUser struct {
 	Base
 	ID       int64  `gorm:"column:id" db:"id" json:"id" form:"id"`
