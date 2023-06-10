@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/go-kratos/kratos/v2/middleware/selector"
 	"strconv"
 	"user/internal/conf"
 	"user/internal/service"
@@ -16,6 +17,7 @@ func NewGRPCServer(c *conf.Server, user *service.UserService, logger log.Logger)
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
+			selector.Server(user.Server()).Match(user.NewWhiteListMatcher()).Build(),
 		),
 	}
 	if c.Grpc.Network != "" {

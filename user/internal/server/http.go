@@ -1,7 +1,6 @@
 package server
 
 import (
-	"context"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
 	"strconv"
 	"user/internal/conf"
@@ -18,7 +17,7 @@ func NewHTTPServer(c *conf.Server, user *service.UserService, logger log.Logger)
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
-			selector.Server(user.Server()).Match(NewWhiteListMatcher()).Build(),
+			selector.Server(user.Server()).Match(user.NewWhiteListMatcher()).Build(),
 		),
 	}
 	if c.Http.Network != "" {
@@ -33,16 +32,4 @@ func NewHTTPServer(c *conf.Server, user *service.UserService, logger log.Logger)
 	srv := http.NewServer(opts...)
 	v1.RegisterAdminUserHTTPServer(srv, user)
 	return srv
-}
-
-func NewWhiteListMatcher() selector.MatchFunc {
-	whiteList := make(map[string]struct{})
-	whiteList["/api.adminuser.v1.AdminUser/frontedRegister"] = struct{}{}
-	whiteList["/api.adminuser.v1.AdminUser/frontedLogin"] = struct{}{}
-	return func(ctx context.Context, operation string) bool {
-		if _, ok := whiteList[operation]; ok {
-			return false
-		}
-		return true
-	}
 }

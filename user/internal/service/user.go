@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-kratos/kratos/v2/middleware"
+	"github.com/go-kratos/kratos/v2/middleware/selector"
 	"github.com/go-kratos/kratos/v2/transport"
 	"strings"
 	"user/helper"
@@ -96,7 +97,6 @@ func (s *UserService) FrontedReset(c context.Context, req *v1.UserRequest) (*v1.
 }
 func (s *UserService) FrontedInfo(c context.Context, req *v1.FrontedInfoRequest) (*v1.ReplyFrontedInfo, error) {
 	return nil, nil
-
 }
 
 func (s *UserService) Server() middleware.Middleware {
@@ -115,5 +115,16 @@ func (s *UserService) Server() middleware.Middleware {
 			}
 			return nil, errors.New("报错了")
 		}
+	}
+}
+func (s *UserService) NewWhiteListMatcher() selector.MatchFunc {
+	whiteList := make(map[string]struct{})
+	whiteList["/api.adminuser.v1.AdminUser/frontedRegister"] = struct{}{}
+	whiteList["/api.adminuser.v1.AdminUser/frontedLogin"] = struct{}{}
+	return func(ctx context.Context, operation string) bool {
+		if _, ok := whiteList[operation]; ok {
+			return false
+		}
+		return true
 	}
 }

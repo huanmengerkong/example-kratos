@@ -2,6 +2,7 @@ package sr
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/hashicorp/consul/api"
 	"time"
@@ -26,7 +27,10 @@ func (h *Hconsul) RegisterService(ctx context.Context, req RecoverQuest) error {
 	registration.Port = req.Port
 	registration.Tags = []string{"tag1"}
 	registration.Check = &api.AgentServiceCheck{
-		TTL: "15",
+		H2PingUseTLS: false,
+		H2PING:       req.IP,
+		// TTL: "10s",
+		Interval: "5s",
 	}
 	/*check := &api.AgentServiceCheck{
 		HTTP:                           data.Grpc + "/health",
@@ -50,7 +54,22 @@ func (h *Hconsul) Client(ctx context.Context) error {
 	h.client = client
 	return err
 }
-
+func (h *Hconsul) DiscorveryService(ctx context.Context, req RecoverQuest) (svc *api.CatalogService, err error) {
+	calot, meta, err := h.client.Catalog().Service(req.ServiceName, req.Tag, &api.QueryOptions{})
+	if err != nil {
+		return
+	}
+	if meta.LastIndex == 0 {
+		return nil, errors.New("没有服务了")
+	}
+	for _, service := range calot {
+		if service.Checks.AggregatedStatus() == api.HealthPassing {
+			svc = service
+			break
+		}
+	}
+	return
+}
 func (h *Hconsul) GetServiceList(ctx context.Context) error {
 	services, _, err := h.client.Catalog().Service("my-service", "", nil)
 	if err != nil {

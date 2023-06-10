@@ -4,11 +4,14 @@ go 1.19
 
 require helloworld v0.0.0
 
+require user v0.0.0
+
 require github.com/go-kratos/kratos/v2 v2.6.2
 
 require (
 	github.com/go-kratos/aegis v0.2.0 // indirect
 	github.com/go-playground/form/v4 v4.2.0 // indirect
+	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
@@ -24,3 +27,5 @@ require (
 
 //多mod 嵌套
 replace helloworld => ../helloworld
+
+replace user => ../user
