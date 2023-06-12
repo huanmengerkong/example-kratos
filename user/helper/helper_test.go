@@ -21,5 +21,5 @@ func TestStructToGromStruct(T *testing.T) {
 		Age  int    `json:"age"`
 	}
 	var user B
-	fmt.Println(StructToGromStruct(a, user))
+	fmt.Println(NewHelper().StructToStruct(a, user))
 }

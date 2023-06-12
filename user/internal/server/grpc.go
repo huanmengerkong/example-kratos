@@ -13,6 +13,7 @@ import (
 )
 
 // NewGRPCServer new a gRPC server.
+// https://juejin.cn/post/7202409558592782373
 func NewGRPCServer(c *conf.Server, user *service.UserService, logger log.Logger) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(

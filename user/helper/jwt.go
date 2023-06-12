@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
+	"strconv"
 	"time"
 )
 
@@ -32,8 +33,7 @@ const (
 func NewJwt(key string) *Hjwt {
 	return &Hjwt{Key: []byte(key)}
 }
-func (h *Hjwt) GetToken(c context.Context, data interface{}) (tokenStr string, err error) {
-
+func (h *Hjwt) GetToken(c context.Context, id int64, data interface{}) (tokenStr string, err error) {
 	// Create claims with multiple fields populated
 	claims := MyCustomClaims{
 		Data: data,
@@ -45,6 +45,7 @@ func (h *Hjwt) GetToken(c context.Context, data interface{}) (tokenStr string, e
 			Issuer:    "example-kratos",
 			Subject:   "study",
 			Audience:  []string{"somebody_else"},
+			ID:        strconv.FormatInt(id, 10),
 		},
 	}
 
@@ -53,7 +54,7 @@ func (h *Hjwt) GetToken(c context.Context, data interface{}) (tokenStr string, e
 	return
 }
 
-func (h *Hjwt) ParamToken(c context.Context, token string) (interface{}, error) {
+func (h *Hjwt) ParamToken(c context.Context, token string) (*MyCustomClaims, error) {
 	tc, err := jwtv5.ParseWithClaims(token, &MyCustomClaims{}, func(token *jwtv5.Token) (interface{}, error) {
 		return h.Key, nil
 	}, jwtv5.WithLeeway(5*time.Second))

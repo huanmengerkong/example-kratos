@@ -7,6 +7,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
 	"github.com/go-kratos/kratos/v2/transport"
+	"strconv"
 	"strings"
 	"user/helper"
 	"user/model"
@@ -48,14 +49,14 @@ func (s *UserService) FrontedLogin(c context.Context, req *v1.LoginRequest) (*v1
 	if err != nil {
 		return &v1.RegisterReply{}, err
 	}
-	token, err := s.hjwt.GetToken(c, data)
+	token, err := s.hjwt.GetToken(c, data.Id, data)
 	if err != nil {
 		return &v1.RegisterReply{}, err
 	}
 	return &v1.RegisterReply{
 		Code: "",
 		Info: &v1.ReplyFrontedInfo{
-			Id:        data.ID,
+			Id:        data.Id,
 			Email:     data.Email,
 			Name:      data.Name,
 			CreatedAt: int64(data.CreatedAt),
@@ -72,7 +73,7 @@ func (s *UserService) FrontedRegister(c context.Context, req *v1.LoginRequest) (
 		if err != nil {
 			return &v1.RegisterReply{}, err
 		}
-		token, err := s.hjwt.GetToken(c, info)
+		token, err := s.hjwt.GetToken(c, info.Id, info)
 		if err != nil {
 			return &v1.RegisterReply{}, err
 		}
@@ -80,7 +81,7 @@ func (s *UserService) FrontedRegister(c context.Context, req *v1.LoginRequest) (
 		return &v1.RegisterReply{
 			Code: "",
 			Info: &v1.ReplyFrontedInfo{
-				Id:        info.ID,
+				Id:        info.Id,
 				Email:     info.Email,
 				Name:      info.Name,
 				CreatedAt: int64(user.CreatedAt),
@@ -95,12 +96,23 @@ func (s *UserService) FrontedRegister(c context.Context, req *v1.LoginRequest) (
 func (s *UserService) FrontedReset(c context.Context, req *v1.UserRequest) (*v1.UserRequest, error) {
 	return nil, nil
 }
-func (s *UserService) FrontedInfo(c context.Context, req *v1.FrontedInfoRequest) (*v1.ReplyFrontedInfo, error) {
-	return nil, nil
+func (s *UserService) FrontedInfo(c context.Context, req *v1.FrontedInfoRequest) (user *v1.ReplyFrontedInfo, err error) {
+	req.Id, _ = strconv.ParseInt(c.Value("id").(string), 10, 64)
+	users, err := s.uc.FrontInfo(c, req)
+	if req.Id < 1 {
+		return &v1.ReplyFrontedInfo{}, err
+	}
+	info := v1.ReplyFrontedInfo{
+		Id:        users.Id,
+		Email:     users.Email,
+		Name:      users.Name,
+		CreatedAt: users.CreatedAt,
+		Coin:      0,
+	}
+	return &info, err
 }
 
 func (s *UserService) Server() middleware.Middleware {
-	fmt.Println(111)
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req interface{}) (interface{}, error) {
 			if header, ok := transport.FromServerContext(ctx); ok {
@@ -110,7 +122,11 @@ func (s *UserService) Server() middleware.Middleware {
 				}
 				jwtToken := auths[1]
 				data, err := s.hjwt.ParamToken(ctx, jwtToken)
-				fmt.Println(data, err)
+				if err != nil {
+					return nil, err
+				}
+				ctx = context.WithValue(ctx, "Authorization", header.RequestHeader().Get("Authorization"))
+				ctx = context.WithValue(ctx, "id", data.RegisteredClaims.ID)
 				return handler(ctx, req)
 			}
 			return nil, errors.New("报错了")

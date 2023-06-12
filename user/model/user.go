@@ -7,7 +7,6 @@ const (
 
 type FrontUser struct {
 	Base
-	ID       int64  `gorm:"column:id" db:"id" json:"id" form:"id"`
 	Name     string `gorm:"column:name" db:"name" json:"name" form:"name"` //  用户名称
 	Status   int64  `gorm:"column:status" db:"status" json:"status" form:"status"`
 	Email    string `gorm:"column:email" db:"email" json:"email" form:"email"`             //  用户邮箱

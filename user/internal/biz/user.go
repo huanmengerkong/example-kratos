@@ -66,3 +66,9 @@ func (uc *UserUsecase) InsertInfo(ctx context.Context, request model.FrontUser) 
 	user, err := uc.repo.InsertUser(ctx, request)
 	return user, err
 }
+
+// FrontInfo 获取前端用户信息
+func (uc *UserUsecase) FrontInfo(ctx context.Context, req *v1.FrontedInfoRequest) (user model.FrontUser, err error) {
+	user, err = uc.repo.GetInfo(ctx, &v1.LoginRequest{Id: req.Id})
+	return
+}

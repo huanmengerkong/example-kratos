@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/huanmengerkong/example-kratos/pkg/sr"
+	"github.com/huanmengerkong/example-kratos/pkg/sr" // 这个地方需要更新tag 才可以拉到最新版本
 	v1 "helloworld/api/helloworld/v1"
 	_ "image/jpeg"
 	"strconv"
@@ -63,7 +63,7 @@ func helloworld(ctx context.Context) {
 func admin(ctx context.Context) {
 	hconsul := sr.NewAgent("localhost:8500")
 	err := hconsul.Client(ctx)
-	svc, err := hconsul.DiscorveryService(ctx, sr.RecoverQuest{ServiceName: "user", Tag: "user"})
+	svc, err := hconsul.DiscorveryService(ctx, sr.RecoverQuest{ServiceName: "user"})
 	if err != nil {
 		return
 	}

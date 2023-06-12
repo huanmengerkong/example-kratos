@@ -37,8 +37,12 @@ func (r *UserRepo) ListAll(context.Context) ([]v1.AdminListReply, error) {
 
 func (r *UserRepo) GetInfo(ctx context.Context, request *v1.LoginRequest) (m model.FrontUser, err error) {
 	err = r.data.mdb.Table(model.FrontUser{}.TableName()).Scopes(func(db *gorm.DB) *gorm.DB {
-		if request.Email != "" {
-			db.Where("email=? ", request.Email)
+		if request.Id > 0 {
+			db.Where("id=? ", request.Id)
+		} else {
+			if request.Email != "" {
+				db.Where("email=? ", request.Email)
+			}
 		}
 		return db
 	}).Where("deleted_at = 0 and status = ?", model.STATUS_USER).Find(&m).Error
