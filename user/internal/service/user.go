@@ -7,6 +7,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
 	"github.com/go-kratos/kratos/v2/transport"
+	"github.com/huanmengerkong/example-kratos/pkg/send"
 	"strconv"
 	"strings"
 	"user/helper"
@@ -34,6 +35,8 @@ func NewUserService(uc *biz.UserUsecase, jwtKey string) *UserService {
 func (s *UserService) AdminList(c context.Context, req *v1.AdminListRequest) (*v1.AdminListReply, error) {
 	return &v1.AdminListReply{AdminList: []*v1.Admin{}}, nil
 }
+
+// 后台管理员添加
 func (s *UserService) AdminAdd(c context.Context, req *v1.UserRequest) (*v1.UserRequest, error) {
 	v, err := s.uc.CreateUser(c, req)
 	fmt.Println(v, err)
@@ -44,6 +47,7 @@ func (s *UserService) AdminAdd(c context.Context, req *v1.UserRequest) (*v1.User
 	}, nil
 }
 
+// 前台登录
 func (s *UserService) FrontedLogin(c context.Context, req *v1.LoginRequest) (*v1.RegisterReply, error) {
 	data, err := s.uc.GetFrontInfo(c, req)
 	if err != nil {
@@ -65,6 +69,8 @@ func (s *UserService) FrontedLogin(c context.Context, req *v1.LoginRequest) (*v1
 		Token: token,
 	}, err
 }
+
+// 前台注册
 func (s *UserService) FrontedRegister(c context.Context, req *v1.LoginRequest) (*v1.RegisterReply, error) {
 	var user model.FrontUser
 	users := s.h.StructToStruct(*req, user)
@@ -73,6 +79,7 @@ func (s *UserService) FrontedRegister(c context.Context, req *v1.LoginRequest) (
 		if err != nil {
 			return &v1.RegisterReply{}, err
 		}
+		// token 生成
 		token, err := s.hjwt.GetToken(c, info.Id, info)
 		if err != nil {
 			return &v1.RegisterReply{}, err
@@ -93,12 +100,18 @@ func (s *UserService) FrontedRegister(c context.Context, req *v1.LoginRequest) (
 	return nil, nil
 }
 
-func (s *UserService) FrontedReset(c context.Context, req *v1.UserRequest) (*v1.UserRequest, error) {
+func (s *UserService) FrontedReset(c context.Context, req *v1.LoginRequest) (*v1.RegisterReply, error) {
+	data, err := s.uc.FrontInfo(c, req)
+	if err != nil {
+		return nil, err
+	}
+	// 开始发email
 	return nil, nil
 }
+
 func (s *UserService) FrontedInfo(c context.Context, req *v1.FrontedInfoRequest) (user *v1.ReplyFrontedInfo, err error) {
-	req.Id, _ = strconv.ParseInt(c.Value("id").(string), 10, 64)
-	users, err := s.uc.FrontInfo(c, req)
+	id, _ := strconv.ParseInt(c.Value("id").(string), 10, 64)
+	users, err := s.uc.FrontInfo(c, &v1.LoginRequest{Id: id})
 	if req.Id < 1 {
 		return &v1.ReplyFrontedInfo{}, err
 	}
@@ -112,6 +125,7 @@ func (s *UserService) FrontedInfo(c context.Context, req *v1.FrontedInfoRequest)
 	return &info, err
 }
 
+// 中间建
 func (s *UserService) Server() middleware.Middleware {
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req interface{}) (interface{}, error) {
@@ -133,6 +147,7 @@ func (s *UserService) Server() middleware.Middleware {
 		}
 	}
 }
+
 func (s *UserService) NewWhiteListMatcher() selector.MatchFunc {
 	whiteList := make(map[string]struct{})
 	whiteList["/api.adminuser.v1.AdminUser/frontedRegister"] = struct{}{}
@@ -143,4 +158,11 @@ func (s *UserService) NewWhiteListMatcher() selector.MatchFunc {
 		}
 		return true
 	}
+}
+
+type Email struct {
+}
+
+func (e *Email) Send(c context.Context, req send.SendMessageRequest) error {
+	return nil
 }

@@ -25,7 +25,7 @@ type ClientService struct {
 
 var ClientSvc ClientService
 
-func main() {
+func mainsss() {
 	ctx := context.Context(context.Background())
 	// 实例化user 服务
 	Init(ctx)

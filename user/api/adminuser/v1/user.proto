@@ -37,7 +37,7 @@ service AdminUser {
       body:"*"
     };
   }
-  rpc frontedReset (UserRequest) returns (UserRequest) {
+  rpc frontedReset (loginRequest) returns (registerReply) {
     option (google.api.http) = {
       post: "/front/reset"
       body:"*"

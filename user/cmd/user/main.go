@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	log2 "github.com/huanmengerkong/example-kratos/pkg/log"
 	"github.com/huanmengerkong/example-kratos/pkg/sr"
 	"golang.org/x/net/context"
@@ -89,7 +88,6 @@ func main() {
 		IP:          bc.Server.Grpc.Addr,
 		Port:        int(bc.Server.Grpc.Port),
 	})
-	fmt.Println(configData, err)
 	app, cleanup, err := wireApp(bc.Server, bc.Data, &configData, configData.Config.Jwt.JwtKey, logger)
 	if err != nil {
 		panic(err)

@@ -34,7 +34,7 @@ type AdminUserHTTPServer interface {
 	// FrontedLogin fronted
 	FrontedLogin(context.Context, *LoginRequest) (*RegisterReply, error)
 	FrontedRegister(context.Context, *LoginRequest) (*RegisterReply, error)
-	FrontedReset(context.Context, *UserRequest) (*UserRequest, error)
+	FrontedReset(context.Context, *LoginRequest) (*RegisterReply, error)
 }
 
 func RegisterAdminUserHTTPServer(s *http.Server, srv AdminUserHTTPServer) {
@@ -125,19 +125,19 @@ func _AdminUser_FrontedRegister0_HTTP_Handler(srv AdminUserHTTPServer) func(ctx 
 
 func _AdminUser_FrontedReset0_HTTP_Handler(srv AdminUserHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in UserRequest
+		var in LoginRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAdminUserfrontedReset)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.FrontedReset(ctx, req.(*UserRequest))
+			return srv.FrontedReset(ctx, req.(*LoginRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*UserRequest)
+		reply := out.(*RegisterReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -167,7 +167,7 @@ type AdminUserHTTPClient interface {
 	FrontedInfo(ctx context.Context, req *FrontedInfoRequest, opts ...http.CallOption) (rsp *ReplyFrontedInfo, err error)
 	FrontedLogin(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *RegisterReply, err error)
 	FrontedRegister(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *RegisterReply, err error)
-	FrontedReset(ctx context.Context, req *UserRequest, opts ...http.CallOption) (rsp *UserRequest, err error)
+	FrontedReset(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *RegisterReply, err error)
 }
 
 type AdminUserHTTPClientImpl struct {
@@ -243,8 +243,8 @@ func (c *AdminUserHTTPClientImpl) FrontedRegister(ctx context.Context, in *Login
 	return &out, err
 }
 
-func (c *AdminUserHTTPClientImpl) FrontedReset(ctx context.Context, in *UserRequest, opts ...http.CallOption) (*UserRequest, error) {
-	var out UserRequest
+func (c *AdminUserHTTPClientImpl) FrontedReset(ctx context.Context, in *LoginRequest, opts ...http.CallOption) (*RegisterReply, error) {
+	var out RegisterReply
 	pattern := "/front/reset"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminUserfrontedReset))

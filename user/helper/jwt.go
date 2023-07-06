@@ -42,13 +42,12 @@ func (h *Hjwt) GetToken(c context.Context, id int64, data interface{}) (tokenStr
 			ExpiresAt: jwtv5.NewNumericDate(time.Now().Add(24 * time.Hour)),
 			IssuedAt:  jwtv5.NewNumericDate(time.Now()),
 			NotBefore: jwtv5.NewNumericDate(time.Now()),
-			Issuer:    "example-kratos",
+			Issuer:    "huanmengerkong",
 			Subject:   "study",
 			Audience:  []string{"somebody_else"},
 			ID:        strconv.FormatInt(id, 10),
 		},
 	}
-
 	token := jwtv5.NewWithClaims(jwtv5.SigningMethodHS256, claims)
 	tokenStr, err = token.SignedString(h.Key)
 	return
@@ -122,5 +121,4 @@ func (h *Hjwt) Refresh(c context.Context, token string, cl jwtv5.Claims) {
 		fmt.Println(err)
 	}
 	fmt.Println(newTokenString)
-
 }

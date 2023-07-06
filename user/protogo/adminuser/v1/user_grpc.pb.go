@@ -28,7 +28,7 @@ type AdminUserClient interface {
 	// fronted
 	FrontedLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*RegisterReply, error)
 	FrontedRegister(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*RegisterReply, error)
-	FrontedReset(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserRequest, error)
+	FrontedReset(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*RegisterReply, error)
 	FrontedInfo(ctx context.Context, in *FrontedInfoRequest, opts ...grpc.CallOption) (*ReplyFrontedInfo, error)
 }
 
@@ -76,8 +76,8 @@ func (c *adminUserClient) FrontedRegister(ctx context.Context, in *LoginRequest,
 	return out, nil
 }
 
-func (c *adminUserClient) FrontedReset(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserRequest, error) {
-	out := new(UserRequest)
+func (c *adminUserClient) FrontedReset(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*RegisterReply, error) {
+	out := new(RegisterReply)
 	err := c.cc.Invoke(ctx, "/api.adminuser.v1.AdminUser/frontedReset", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -104,7 +104,7 @@ type AdminUserServer interface {
 	// fronted
 	FrontedLogin(context.Context, *LoginRequest) (*RegisterReply, error)
 	FrontedRegister(context.Context, *LoginRequest) (*RegisterReply, error)
-	FrontedReset(context.Context, *UserRequest) (*UserRequest, error)
+	FrontedReset(context.Context, *LoginRequest) (*RegisterReply, error)
 	FrontedInfo(context.Context, *FrontedInfoRequest) (*ReplyFrontedInfo, error)
 	mustEmbedUnimplementedAdminUserServer()
 }
@@ -125,7 +125,7 @@ func (UnimplementedAdminUserServer) FrontedLogin(context.Context, *LoginRequest)
 func (UnimplementedAdminUserServer) FrontedRegister(context.Context, *LoginRequest) (*RegisterReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FrontedRegister not implemented")
 }
-func (UnimplementedAdminUserServer) FrontedReset(context.Context, *UserRequest) (*UserRequest, error) {
+func (UnimplementedAdminUserServer) FrontedReset(context.Context, *LoginRequest) (*RegisterReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FrontedReset not implemented")
 }
 func (UnimplementedAdminUserServer) FrontedInfo(context.Context, *FrontedInfoRequest) (*ReplyFrontedInfo, error) {
@@ -217,7 +217,7 @@ func _AdminUser_FrontedRegister_Handler(srv interface{}, ctx context.Context, de
 }
 
 func _AdminUser_FrontedReset_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserRequest)
+	in := new(LoginRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -229,7 +229,7 @@ func _AdminUser_FrontedReset_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: "/api.adminuser.v1.AdminUser/frontedReset",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminUserServer).FrontedReset(ctx, req.(*UserRequest))
+		return srv.(AdminUserServer).FrontedReset(ctx, req.(*LoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
