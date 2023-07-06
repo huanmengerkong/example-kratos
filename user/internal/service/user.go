@@ -7,7 +7,6 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
 	"github.com/go-kratos/kratos/v2/transport"
-	"github.com/huanmengerkong/example-kratos/pkg/send"
 	"strconv"
 	"strings"
 	"user/helper"
@@ -158,11 +157,4 @@ func (s *UserService) NewWhiteListMatcher() selector.MatchFunc {
 		}
 		return true
 	}
-}
-
-type Email struct {
-}
-
-func (e *Email) Send(c context.Context, req send.SendMessageRequest) error {
-	return nil
 }
